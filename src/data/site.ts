@@ -1,0 +1,63 @@
+export const site = {
+  name: "Qin's Space",
+  author: 'Qin',
+  description: 'Qin 的个人空间，记录物理学习、开源项目和一点好奇心。',
+  github: 'https://github.com/DEVbyQIN',
+};
+
+export const nav = [
+  { href: '/', label: '首页' },
+  { href: '/projects/', label: '项目' },
+  { href: '/blog/', label: '文章' },
+  { href: '/notes/', label: '笔记' },
+  { href: '/playground/', label: '实验室' },
+  { href: '/about/', label: '关于' },
+];
+
+export const projects = [
+  {
+    slug: 'beam-dynamics',
+    title: 'UED 束流动力学模拟',
+    subtitle: 'Beam Dynamics',
+    category: 'physics',
+    categoryLabel: '物理计算',
+    description: '从解析包络到宏粒子追踪，探索电子束在束线中的演化。',
+    tags: ['Python', 'OCELOT', 'UED'],
+    repo: 'https://github.com/DEVbyQIN/Beam-Dynamics',
+    visual: 'beam',
+    status: '持续研究',
+    body: '面向超快电子衍射的束流动力学模拟框架，包含 AG 包络和 OCELOT 宏粒子两条计算路线，共用束线配置，并在明确初态与诊断面下比较结果。',
+    details: ['共用配置与结果诊断', '束流尺寸、纵向压缩和相空间演化', '数值回归与模型适用范围分别记录'],
+    boundary: '项目仍在研究与开发中。数值回归通过不等于完整空间电荷模型或真实束线已获实验验证；具体适用范围以仓库中的项目现状和物理说明为准。',
+  },
+  {
+    slug: 'active-sessions',
+    title: '让活跃会话一眼可见',
+    subtitle: 'DSH Active Sessions',
+    category: 'tools',
+    categoryLabel: '开源工具',
+    description: '一个小小的铃铛，把正在进行和最近使用的会话放到手边。',
+    tags: ['JavaScript', 'DSH', 'MIT'],
+    repo: 'https://github.com/DEVbyQIN/dsh-active-sessions',
+    visual: 'sessions',
+    status: '已开源',
+    body: '为 DeepSeek Harness 工作区添加活跃会话入口。通过一个悬浮面板，查看正在运行的主会话和最近 72 小时的会话，并跳转回对应工作区。',
+    details: ['正在进行与最近三天两种筛选', '工作区信息与运行状态提示', '浅色和深色主题适配'],
+    boundary: '安装方式、版本兼容性和当前功能以公开仓库 README 为准。这里展示的是项目简介，示意图并非真实会话记录。',
+  },
+  {
+    slug: 'sidebar-shortcuts',
+    title: '给侧栏留一点空间',
+    subtitle: 'DSH Sidebar Shortcuts',
+    category: 'tools',
+    categoryLabel: '开源工具',
+    description: '把常用入口整理成图标宫格或紧凑双列，让侧栏更清爽。',
+    tags: ['JavaScript', 'UI', 'MIT'],
+    repo: 'https://github.com/DEVbyQIN/dsh-sidebar-shortcuts',
+    visual: 'shortcuts',
+    status: '已开源',
+    body: '将 DeepSeek Harness 侧栏的功能入口排成紧凑双列或图标宫格，保留原生按钮行为，并按需要选择显示哪些入口。',
+    details: ['图标宫格与紧凑双列', '自定义可见入口', '浏览器本地偏好保存'],
+    boundary: '安装方式和宿主兼容性以公开仓库 README 为准。项目示意图仅用于说明布局。',
+  },
+] as const;

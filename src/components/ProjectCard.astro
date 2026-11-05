@@ -1,0 +1,11 @@
+---
+import type { projects } from '../data/site';
+import ProjectVisual from './ProjectVisual.astro';
+import Icon from './Icon.astro';
+interface Props { project: (typeof projects)[number]; }
+const { project } = Astro.props;
+---
+<article class="project-card" data-category={project.category}>
+  <a class="visual-link" href={`/projects/${project.slug}/`} aria-label={`了解${project.title}`}><ProjectVisual kind={project.visual} /></a>
+  <div class="project-card-body"><div class="eyebrow">{project.categoryLabel} <span class="status-label">{project.status}</span></div><a class="project-title" href={`/projects/${project.slug}/`}><h3>{project.title}</h3><Icon name="northeast" size={19}/></a><p>{project.description}</p><div class="tags">{project.tags.map(tag => <span>{tag}</span>)}</div></div>
+</article>

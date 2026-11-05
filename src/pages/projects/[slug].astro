@@ -1,0 +1,11 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectVisual from '../../components/ProjectVisual.astro';
+import Icon from '../../components/Icon.astro';
+import { projects } from '../../data/site';
+export function getStaticPaths() { return projects.map(project => ({ params: { slug: project.slug }, props: { project } })); }
+const { project } = Astro.props;
+---
+<Base title={project.title} description={project.description}>
+  <article class="wrap project-detail"><a class="back-link" href="/projects/">← 全部项目</a><div class="project-detail-heading"><div><span class="eyebrow">{project.subtitle} / {project.status}</span><h1>{project.title}<span class="heading-dot">.</span></h1><p>{project.description}</p></div><a class="button primary" href={project.repo} target="_blank" rel="noopener noreferrer">查看 GitHub <Icon name="northeast" size={18}/></a></div><ProjectVisual kind={project.visual}/><div class="detail-columns"><div class="prose"><h2>关于这个项目</h2><p>{project.body}</p><h2>主要内容</h2><ul>{project.details.map(item => <li>{item}</li>)}</ul><h2>当前范围</h2><p>{project.boundary}</p><p><a href={`${project.repo}#readme`} target="_blank" rel="noopener noreferrer">阅读公开仓库中的完整说明 ↗</a></p></div><aside class="detail-aside"><span class="eyebrow">TOOLBOX</span><div class="tags">{project.tags.map(tag => <span>{tag}</span>)}</div><hr/><span class="eyebrow">LINKS</span><a href={project.repo} target="_blank" rel="noopener noreferrer">源代码与文档 ↗</a></aside></div></article>
+</Base>

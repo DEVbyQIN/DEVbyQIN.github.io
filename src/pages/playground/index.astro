@@ -1,0 +1,44 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="小实验室" description="拖动波长和缝距，观察理想双缝干涉条纹的变化。">
+  <section class="wrap page-intro"><span class="eyebrow">PLAY, CHANGE, WONDER</span><h1>让物理，动起来<span class="heading-dot">.</span></h1><p>把一个参数改一下，看看世界在模型里如何回应。</p></section>
+  <section class="wrap page-content"><div class="experiment"><div class="experiment-top"><div><span class="eyebrow">EXPERIMENT 01</span><h2>光的明暗之间</h2><p>理想双缝干涉 · 远场近似</p></div><span class="experiment-label"><span class="green-dot"></span> 浏览器内实时计算</span></div><div class="experiment-layout"><div class="simulation"><canvas id="interference" width="900" height="470" role="img" aria-label="理想双缝干涉图：上方为屏幕条纹，下方为归一化光强曲线。参数变化的条纹间距显示在控制区。"></canvas><div class="simulation-legend"><span>观察屏横坐标 x / mm</span><span>归一化光强 I / Imax</span></div></div><div class="controls"><label for="wavelength">波长 <output id="wavelength-value" for="wavelength">550 nm</output></label><input type="range" id="wavelength" min="380" max="750" value="550" step="5"/><div class="range-labels"><span>380 nm</span><span>750 nm</span></div><label for="slit">双缝间距 <output id="slit-value" for="slit">0.30 mm</output></label><input type="range" id="slit" min="0.1" max="0.8" value="0.3" step="0.01"/><div class="range-labels"><span>0.10 mm</span><span>0.80 mm</span></div><div class="experiment-result"><span>相邻明纹间距</span><strong><output id="spacing" for="wavelength slit" aria-live="polite">1.83</output><small> mm</small></strong><span>屏距 L = 1.00 m</span></div><button class="button secondary reset-experiment">恢复初始参数 ↺</button></div></div><div class="experiment-note"><span>MODEL NOTES</span><p>两束等强、同相相干光，采用远场、小角度近似。I/Imax = cos²(πdx/λL)，不含有限缝宽的衍射包络。条纹颜色为示意，本页是理论可视化。</p></div></div><a class="text-link experiment-reading" href="/notes/double-slit/">看看背后的公式与假设 →</a></section>
+  <script>
+    const canvas = document.querySelector<HTMLCanvasElement>('#interference')!;
+    const ctx = canvas.getContext('2d');
+    const wavelength = document.querySelector<HTMLInputElement>('#wavelength')!;
+    const slit = document.querySelector<HTMLInputElement>('#slit')!;
+    const waveOutput = document.querySelector<HTMLOutputElement>('#wavelength-value')!;
+    const slitOutput = document.querySelector<HTMLOutputElement>('#slit-value')!;
+    const spacingOutput = document.querySelector<HTMLOutputElement>('#spacing')!;
+    function lightColor(nm: number): [number, number, number] {
+      const points = [[380,135,65,235],[440,73,90,245],[490,35,194,218],[530,79,212,141],[580,240,207,85],[630,241,119,87],[750,202,67,79]];
+      for (let i = 1; i < points.length; i++) {
+        if (nm <= points[i][0]) { const a=points[i-1], b=points[i], t=(nm-a[0])/(b[0]-a[0]); return [1,2,3].map(j=>Math.round(a[j]+(b[j]-a[j])*t)) as [number,number,number]; }
+      }
+      return [202,67,79];
+    }
+    function draw() {
+      const nm = Number(wavelength.value), d = Number(slit.value);
+      waveOutput.value = `${nm} nm`; slitOutput.value = `${d.toFixed(2)} mm`;
+      spacingOutput.value = (nm * 0.001 / d).toFixed(2);
+      if (!ctx) return;
+      const w=900, h=470, left=60, right=865;
+      ctx.fillStyle='#1d2422'; ctx.fillRect(0,0,w,h);
+      const color=lightColor(nm), rgb=color.join(',');
+      function intensity(px: number) { const x=((px-left)/(right-left)*20-10)*1e-3; return Math.cos(Math.PI*d*1e-3*x/(nm*1e-9))**2; }
+      for (let px=left;px<=right;px++) { const value=intensity(px); ctx.fillStyle=`rgb(${color.map(c=>Math.round(c*(0.04+0.96*value))).join(',')})`; ctx.fillRect(px,45,1,150); }
+      ctx.font='12px system-ui'; ctx.fillStyle='#b6c4b9'; ctx.fillText('SCREEN PATTERN',left,28);
+      ctx.fillText('NORMALIZED INTENSITY',left,245);
+      ctx.strokeStyle='#3d4943'; ctx.lineWidth=1;
+      for(let tick=-10;tick<=10;tick+=2) { const px=left+(tick+10)/20*(right-left); ctx.beginPath(); ctx.moveTo(px,265); ctx.lineTo(px,410); ctx.stroke(); ctx.fillStyle='#b6c4b9'; ctx.textAlign='center'; ctx.fillText(String(tick),px,438); }
+      ctx.textAlign='left';
+      for (const [y,label] of [[270,'1.0'],[335,'0.5'],[400,'0.0']] as const) { ctx.beginPath(); ctx.moveTo(left,y); ctx.lineTo(right,y); ctx.stroke(); ctx.fillStyle='#b6c4b9'; ctx.fillText(label,23,y+4); }
+      ctx.beginPath();ctx.strokeStyle=`rgb(${rgb})`;ctx.lineWidth=2.5;
+      for(let px=left;px<=right;px++) { const y=400-intensity(px)*130; if(px===left)ctx.moveTo(px,y);else ctx.lineTo(px,y); }ctx.stroke();
+    }
+    wavelength.addEventListener('input',draw);slit.addEventListener('input',draw);
+    document.querySelector('.reset-experiment')?.addEventListener('click',()=>{wavelength.value='550';slit.value='0.3';draw();});draw();
+  </script>
+</Base>

@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Orbit from '../components/Orbit.astro';
+import Icon from '../components/Icon.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import EntryList from '../components/EntryList.astro';
+import { projects } from '../data/site';
+const writing = (await getCollection('writing', ({data}) => !data.draft)).sort((a,b) => b.data.date.valueOf()-a.data.date.valueOf()).slice(0,3);
+---
+<Base>
+  <section class="hero wrap">
+    <div class="hero-copy"><div class="hero-kicker"><span class="green-dot"></span> HELLO, WORLD. 这里是我的一小块互联网</div><h1>Hi, I'm <em>Qin.</em><span class="hero-star">✳</span></h1><p class="hero-english">Physics, code & a little curiosity.</p><p class="hero-description">在物理和代码之间探索，<br/>也把沿途的想法，慢慢记录下来。</p><div class="hero-buttons"><a class="button primary" href="/projects/">看看我在做什么 <Icon name="arrow" size={18}/></a><a class="text-link" href="/about/">认识一下 <Icon name="northeast" size={16}/></a></div><div class="hero-footnote"><span>物理学习者</span><span>开源工具创作者</span><span>永远保持好奇</span></div></div>
+    <Orbit />
+  </section>
+  <section class="explore-section wrap" aria-labelledby="explore-title">
+    <div class="section-heading"><div><span class="eyebrow">A FEW THINGS I CARE ABOUT</span><h2 id="explore-title">一些正在探索的方向<span class="heading-dot">.</span></h2></div><span class="section-aside">从一个想法，到一点点实践 ↙</span></div>
+    <div class="bento-grid">
+      <a class="bento bento-physics" href="/projects/?category=physics"><div class="bento-head"><span class="bento-icon"><Icon name="atom" size={23}/></span><Icon name="northeast"/></div><div><span class="eyebrow">01 / PHYSICS & RESEARCH</span><h3>理解世界的另一种方式</h3><p>物理学习、数值计算，以及从问题出发的探索。</p><span class="bento-bottom">UED · 束流动力学 · 模拟</span></div><svg class="bento-wave" viewBox="0 0 260 120" fill="none" aria-hidden="true"><path d="M0 60c30-95 50 95 80 0S130 155 160 60s50 95 80 0" stroke="currentColor" stroke-width="1.5"/><path d="M0 60h260" stroke="currentColor" opacity=".2" stroke-dasharray="3 5"/></svg></a>
+      <a class="bento bento-code" href="/projects/?category=tools"><div class="bento-head"><span class="bento-icon"><Icon name="code" size={23}/></span><Icon name="northeast"/></div><div><span class="eyebrow">02 / OPEN SOURCE</span><h3>让小工具解决小麻烦</h3><p>从日常需求出发，把想法写成可以使用的代码。</p><span class="bento-bottom">JavaScript · Python · DSH Plugins</span></div><span class="code-decoration" aria-hidden="true">{`{ }`}</span></a>
+      <a class="bento bento-notes" href="/notes/"><div class="bento-head"><span class="bento-icon"><Icon name="book" size={23}/></span><Icon name="northeast"/></div><div><span class="eyebrow">03 / NOTES & WRITING</span><h3>给思考留下一点痕迹</h3><p>公式、推导和手写笔记，也可以在这里慢慢生长。</p><span class="bento-bottom">学习笔记 · 文字记录</span></div></a>
+      <a class="bento bento-play" href="/playground/"><div class="bento-head"><span class="bento-icon"><Icon name="spark" size={23}/></span><Icon name="northeast"/></div><div><span class="eyebrow">04 / LITTLE EXPERIMENTS</span><h3>如果，把参数改一下呢？</h3><p>动手拖一拖，让抽象的物理变得可见。</p><span class="bento-bottom">试试双缝干涉 <span>↗</span></span></div><div class="tiny-fringes" aria-hidden="true"></div></a>
+    </div>
+  </section>
+  <section class="wrap section-space" aria-labelledby="projects-title"><div class="section-heading"><div><span class="eyebrow">SELECTED WORK</span><h2 id="projects-title">最近做的一些东西<span class="heading-dot">.</span></h2></div><a class="text-link" href="/projects/">全部项目 <Icon name="arrow" size={17}/></a></div><div class="project-grid">{projects.map(project => <ProjectCard project={project}/>)}</div></section>
+  <section class="wrap writing-section section-space" aria-labelledby="writing-title"><div class="section-heading"><div><span class="eyebrow">A GROWING NOTEBOOK</span><h2 id="writing-title">写下来的，才不会飘走<span class="heading-dot">.</span></h2></div><a class="text-link" href="/blog/">文章与记录 <Icon name="arrow" size={17}/></a></div><EntryList entries={writing}/></section>
+  <section class="wrap hello-strip"><span class="hello-spark" aria-hidden="true">✳</span><div><span class="eyebrow">NICE TO MEET YOU</span><h2>世界很大，好奇心也是。</h2><p>如果你也对物理、代码或有趣的小工具感兴趣，欢迎来逛逛。</p></div><a class="button secondary" href="https://github.com/DEVbyQIN" target="_blank" rel="noopener noreferrer">在 GitHub 找到我 <Icon name="northeast" size={17}/></a></section>
+</Base>

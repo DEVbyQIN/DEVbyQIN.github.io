@@ -1,0 +1,75 @@
+---
+import '../styles/global.css';
+import 'katex/dist/katex.min.css';
+import { site, nav } from '../data/site';
+import Icon from '../components/Icon.astro';
+interface Props { title?: string; description?: string; }
+const { title, description = site.description } = Astro.props;
+const currentPath = Astro.url.pathname;
+const pageTitle = title ? `${title} · ${site.name}` : `${site.name} — Physics, Code & Curiosity`;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f8f7f2" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:url" content={new URL(currentPath, Astro.site)} />
+    <link rel="canonical" href={new URL(currentPath, Astro.site)} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{pageTitle}</title>
+    <script is:inline>
+      (() => {
+        let theme;
+        try { theme = localStorage.getItem('qin-theme'); } catch {}
+        document.documentElement.dataset.theme = theme === 'dark' || theme === 'light' ? theme : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+    <header class="site-header wrap">
+      <a class="brand" href="/" aria-label="Qin's Space 首页"><span class="brand-mark">Q<span>.</span></span><span>Qin's Space<span class="brand-dot">✦</span></span></a>
+      <nav class="desktop-nav" aria-label="主导航">{nav.map(item => <a href={item.href} aria-current={(item.href === '/' ? currentPath === '/' : currentPath.startsWith(item.href)) ? 'page' : undefined}>{item.label}</a>)}</nav>
+      <div class="nav-actions"><button class="icon-button theme-toggle" aria-label="切换到深色模式" title="切换主题"><Icon name="moon" class="theme-moon"/><Icon name="sun" class="theme-sun"/></button><button class="icon-button menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="打开导航"><Icon name="menu"/></button></div>
+    </header>
+    <nav class="mobile-nav wrap" id="mobile-nav" aria-label="移动端导航" hidden>{nav.map(item => <a href={item.href} aria-current={(item.href === '/' ? currentPath === '/' : currentPath.startsWith(item.href)) ? 'page' : undefined}>{item.label}</a>)}</nav>
+    <main id="main"><slot /></main>
+    <footer class="site-footer wrap"><div><a class="footer-brand" href="/">Qin's Space<span>✦</span></a><p>保持好奇，慢慢积累。</p></div><div class="footer-right"><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub <Icon name="northeast" size={14}/></a><span>© {new Date().getFullYear()} Qin · Built with Astro</span><span class="footer-note">A small space, always growing.</span></div></footer>
+    <script>
+      const themeButton = document.querySelector<HTMLButtonElement>('.theme-toggle');
+      function updateThemeLabel() {
+        themeButton?.setAttribute('aria-label', document.documentElement.dataset.theme === 'dark' ? '切换到浅色模式' : '切换到深色模式');
+      }
+      updateThemeLabel();
+      themeButton?.addEventListener('click', () => {
+        const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = theme;
+        try { localStorage.setItem('qin-theme', theme); } catch {}
+        updateThemeLabel();
+      });
+      matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+        let preference;
+        try { preference = localStorage.getItem('qin-theme'); } catch {}
+        if (!preference) { document.documentElement.dataset.theme = event.matches ? 'dark' : 'light'; updateThemeLabel(); }
+      });
+      const menu = document.querySelector<HTMLButtonElement>('.menu-toggle');
+      const mobileNav = document.querySelector<HTMLElement>('#mobile-nav');
+      const closeMenu = () => { if (mobileNav) mobileNav.hidden = true; menu?.setAttribute('aria-expanded', 'false'); menu?.setAttribute('aria-label', '打开导航'); };
+      menu?.addEventListener('click', () => {
+        const open = menu.getAttribute('aria-expanded') !== 'true';
+        menu.setAttribute('aria-expanded', String(open));
+        menu.setAttribute('aria-label', open ? '关闭导航' : '打开导航');
+        if (mobileNav) mobileNav.hidden = !open;
+      });
+      document.addEventListener('keydown', event => { if (event.key === 'Escape') { closeMenu(); } });
+      matchMedia('(min-width: 821px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
+    </script>
+  </body>
+</html>

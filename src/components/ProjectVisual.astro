@@ -1,0 +1,24 @@
+---
+interface Props { kind: string; }
+const { kind } = Astro.props;
+---
+<div class:list={['project-visual', `visual-${kind}`]} aria-hidden="true">
+  {kind === 'beam' ? <>
+    <div class="visual-caption">BEAM ENVELOPE <span>项目示意</span></div>
+    <svg viewBox="0 0 520 200" fill="none">
+      <g stroke="currentColor" opacity=".12"><path d="M35 20v150h455M35 60h455M35 100h455M35 140h455M125 20v150M215 20v150M305 20v150M395 20v150"/></g>
+      <rect x="175" y="32" width="32" height="132" rx="7" fill="currentColor" opacity=".08"/>
+      <rect x="345" y="32" width="32" height="132" rx="7" fill="currentColor" opacity=".08"/>
+      <path d="M35 38C110 39 135 60 190 91S260 112 310 87 400 34 490 30" stroke="#d398a5" stroke-width="3"/>
+      <path d="M35 150C110 149 135 128 190 97S260 76 310 101 400 154 490 158" stroke="#d398a5" stroke-width="3"/>
+      <path d="M35 94h455" stroke="currentColor" opacity=".4" stroke-dasharray="4 6"/>
+      <g fill="currentColor" font-size="10" font-family="monospace" opacity=".6"><text x="178" y="188">SOL 01</text><text x="348" y="188">SOL 02</text><text x="468" y="92">z →</text></g>
+    </svg>
+  </> : kind === 'sessions' ? <>
+    <div class="visual-caption">WORKSPACE <span>界面示意</span></div>
+    <div class="session-mock"><div class="mock-header"><span>活跃会话</span><span class="green-dot"></span></div><div class="mock-tabs"><span>正在进行中</span><span>最近三天</span></div><div class="mock-line"><i></i><span>一个正在探索的问题<small>物理与计算 · 运行中</small></span><b>↗</b></div><div class="mock-line"><i></i><span>把想法变成小工具<small>开源工具 · 运行中</small></span><b>↗</b></div></div>
+  </> : <>
+    <div class="visual-caption">A TIDIER SIDEBAR <span>界面示意</span></div>
+    <div class="shortcut-mock">{['⌂', '▤', '✧', '⌘', '◷', '⚙'].map((item, i) => <div><span>{item}</span><small>{['工作区', '文件', '插件', '命令', '最近', '设置'][i]}</small></div>)}</div>
+  </>}
+</div>

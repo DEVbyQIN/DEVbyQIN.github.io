@@ -1,0 +1,7 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import EntryList from '../../components/EntryList.astro';
+const entries = (await getCollection('writing', ({data}) => data.kind === 'blog' && !data.draft)).sort((a,b)=>b.data.date.valueOf()-a.data.date.valueOf());
+---
+<Base title="文章" description="关于学习、代码和日常探索的文字记录。"><section class="wrap page-intro"><span class="eyebrow">NOTES TO THE FUTURE</span><h1>想法，慢慢写<span class="heading-dot">.</span></h1><p>留一点空间，记录过程，也记录那些还没想清楚的问题。</p></section><section class="wrap page-content"><EntryList entries={entries}/><div class="quiet-note"><span>✦</span><p>这里刚刚开始。当前文章是建站排版示例，之后可以换成自己的记录。</p></div></section></Base>

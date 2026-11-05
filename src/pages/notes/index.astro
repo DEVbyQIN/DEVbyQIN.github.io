@@ -1,0 +1,8 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import EntryList from '../../components/EntryList.astro';
+import Icon from '../../components/Icon.astro';
+const entries = (await getCollection('writing', ({data}) => data.kind === 'notes' && !data.draft)).sort((a,b)=>b.data.date.valueOf()-a.data.date.valueOf());
+---
+<Base title="笔记" description="物理笔记、公式与手写内容的数字入口。"><section class="wrap page-intro"><span class="eyebrow">AN OPEN NOTEBOOK</span><h1>把知识，一页页留下<span class="heading-dot">.</span></h1><p>不必一次整理所有手稿。从一个问题、一张扫描图开始。</p></section><section class="wrap page-content"><div class="notebook-intro"><Icon name="book" size={28}/><div><h2>手写，也是一种很好的思考方式。</h2><p>这里可以放扫描页、关键公式和简短说明，让纸上的推导有一个容易找到的入口。</p></div><span class="notebook-doodle" aria-hidden="true">∫ ψ*ψ dx = 1</span></div><EntryList entries={entries}/><div class="quiet-note"><span>✦</span><p>当前示例展示公式和目录效果，尚未收录真实手写笔记。</p></div></section></Base>

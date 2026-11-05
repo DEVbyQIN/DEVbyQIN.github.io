@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projects } from '../../data/site';
+---
+<Base title="项目" description="Qin 的公开项目：物理模拟、开源插件与实用工具。">
+  <div class="wrap page-intro"><span class="eyebrow">THINGS I'VE BEEN BUILDING</span><h1>从想法，到实践<span class="heading-dot">.</span></h1><p>用代码理解一些问题，也解决一些日常的小麻烦。</p></div>
+  <section class="wrap page-content"><div class="filter-bar" role="group" aria-label="按项目类型筛选"><button class="filter-button active" data-filter="all" aria-pressed="true">全部 <span>03</span></button><button class="filter-button" data-filter="physics" aria-pressed="false">物理计算 <span>01</span></button><button class="filter-button" data-filter="tools" aria-pressed="false">开源工具 <span>02</span></button></div><div class="project-grid">{projects.map(project => <ProjectCard project={project}/>)}</div><p class="small-note">项目介绍整理自公开仓库；示意图用于解释项目内容。实现细节与当前状态请参阅各项目仓库。</p></section>
+  <script>
+    const filterButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-category]')];
+    function applyFilter(filter: string) {
+      filterButtons.forEach(button => { const active = button.dataset.filter === filter; button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active)); });
+      cards.forEach(card => card.hidden = filter !== 'all' && card.dataset.category !== filter);
+    }
+    const initial = new URLSearchParams(location.search).get('category');
+    if (initial === 'tools' || initial === 'physics') applyFilter(initial);
+    filterButtons.forEach(button => button.addEventListener('click', () => {
+      const filter = button.dataset.filter || 'all'; applyFilter(filter);
+      const url = new URL(location.href); if (filter === 'all') url.searchParams.delete('category'); else url.searchParams.set('category', filter); history.replaceState(null, '', url);
+    }));
+  </script>
+</Base>

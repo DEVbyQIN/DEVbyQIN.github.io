@@ -1,0 +1,9 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+interface Props { entries: CollectionEntry<'writing'>[]; }
+const { entries } = Astro.props;
+---
+<div class="entry-list">
+  {entries.map(entry => <a class="entry-row" href={`/${entry.data.kind}/${entry.id}/`}><div class="entry-date">{entry.data.date.toISOString().slice(0,10).replaceAll('-', '.')}</div><div><div class="entry-meta">{entry.data.kind === 'notes' ? '物理笔记' : '文字记录'}{entry.data.sample && <span class="sample-badge">排版示例</span>}</div><h3>{entry.data.title}</h3><p>{entry.data.description}</p></div><Icon name="northeast" /></a>)}
+</div>
